@@ -23,6 +23,7 @@ typedef struct ListeD
     struct ListeNode *begin;
     struct ListeNode *end;
 }*ListeD;
+ListeD liste_pop_front_liste(ListeD li);
 //*************************************************************************************//
 //cette fonction permet de creer une liste
 ListeD new_listeD(void){
@@ -151,7 +152,7 @@ ListeD liste_push_front_liste(ListeD li,int x){
 
 //*************************************************************************************//
 //cette fonction permet d'ajouter un element en milieu de la liste
-ListeD liste_push_medium_liste(ListeD li,int x,int val){
+ListeD liste_push_medium_liste(ListeD li,int x,int val){//ici l'element est ajouter apres la valeur val
     ListeNode *element; //ici on cree l'element a inserer dans la liste
     element=malloc(sizeof(*element));
     if (element==NULL)
@@ -175,7 +176,7 @@ ListeD liste_push_medium_liste(ListeD li,int x,int val){
         li->end=element;
     }
     else
-    {   ListeNode *temp=li->begin->next;//cette variable temporaire vas nous permettre de parcourrie toute laliste et nous eviter de boujer le pointeru beging ou end
+    {   ListeNode *temp=li->begin;//cette variable temporaire vas nous permettre de parcourrie toute laliste et nous eviter de boujer le pointeru beging ou end***
         
         while (temp != NULL && temp->value != val) {
         temp = temp->next;
@@ -198,6 +199,175 @@ ListeD liste_push_medium_liste(ListeD li,int x,int val){
     li->length++;
     return li;
     }
+
+//*************************************************************************************//
+//cette fonction permet d'ajouter un element en milieu de la liste
+ListeD liste_push_medium_liste1(ListeD li,int x1,int val1){//ici l'element est ajouter apres la valeur val
+    ListeNode *element; //ici on cree l'element a inserer dans la liste
+    element=malloc(sizeof(*element));
+    if (element==NULL)
+    {
+        fprintf(stderr,"Error :Allocation impossible\n");
+        exit(EXIT_FAILURE);
+    }
+    element->value=x1;
+    element->next=NULL;  //ici les pointeur next ne pointe encore sur rien dont il est initialiser a NULL
+    element->back=NULL;   //ici les pointeur back ne pointe encore sur rien dont il est initialiser a NULL
+    if (listeD_isempty(li))
+    {
+        li=malloc(sizeof(*li));
+        if (li==NULL)
+        {
+            fprintf(stderr,"Error :Allocation impossible\n");
+            exit(EXIT_FAILURE);
+        }
+        li->length=0;
+        li->begin=element;//ici l'element qu'on vient de creer est en meme temps premier et dernier element c'est pour cette raison que begin=element te end=element
+        li->end=element;
+    }
+    else
+    {   ListeNode *temp=li->begin;//cette variable temporaire vas nous permettre de parcourrie toute laliste et nous eviter de bouger le pointeru beging ou end
+        
+        while (temp != NULL && temp->value != val1) {
+        temp = temp->next;
+        }   
+        if (temp == NULL) {
+        // Aucun élément de valeur 6 trouvé dans la liste
+        printf("Position non trouver\n");
+        free(element); // Libérer la mémoire allouée à l'élément
+        return li; // Ou retourner NULL ou une erreur
+        }
+        // Insérer l'élément avant l'élément de valeur val trouvé
+        if (temp==li->begin)
+        {    
+            element->next=temp;
+            temp->back=element;
+            li->begin=element;
+            element->back=NULL;//******
+        }
+        else
+        {
+            element->next=temp;
+            element->back=temp->back;
+            temp->back->next=element;
+            temp->back=element;
+            
+        }
+        
+        
+    }
+    
+    li->length++;
+    return li;
+    }
+
+
+//*************************************************************************************//
+//cette fonction permet de supprimer un element en milieu de la liste
+ListeD liste_pop_medium_liste(ListeD li,int val){//ici l'element est supprimer apres la valeur val
+    //si la iste est vide
+    if (listeD_isempty(li))
+    {   printf("Rien a suppreimer la liste est deja vide\n");
+        return new_listeD();
+    }
+    //si la liste comporte un seul element
+    if (li->begin==li->end)
+    {
+        free(li);
+        li=NULL;
+        return new_listeD();
+    }
+    //si la liste comporte plus d'un  element
+      ListeNode *temp=li->begin;//cette variable temporaire vas nous permettre de parcourrie toute laliste et nous eviter de bouger le pointeru beging ou end***
+        while (temp != NULL && temp->value != val) {
+        temp = temp->next;
+        //li=li->begin->next;
+        }   
+        if (temp == NULL) {
+        // Aucun élément de valeur 6 trouvé dans la liste
+        printf("Position non trouver\n");
+        // Libérer la mémoire allouée à l'élément
+        return li; // Ou retourner NULL ou une erreur
+        }
+        // suppression de  l'élément après l'élément de valeur val trouvé
+        ListeNode *temp1=temp->next;//la varaiable temp1 permet de sauvegarder la valeur de temp->next en d'autre terme la valeur que l'on vas supprimer sera mtn dans temp1
+        temp->next=temp1->next;
+        if (temp->next != NULL) {
+        temp->next->back = temp;//le predececeur du suivant de l'element temps est juste encore egale a temp
+        }
+        temp1->next=NULL;//ici on coupe le lien que cet element avais avec la liste
+        temp1->back=NULL;
+        free(temp1);
+        temp1=NULL;
+        li->length--;
+        return li;
+    }
+
+
+
+    //*************************************************************************************//
+//cette fonction permet de supprimer un element en milieu de la liste
+ListeD liste_pop_medium_liste1(ListeD li,int val){//ici l'element est supprimer avant la valeur val
+    //si la iste est vide
+    if (listeD_isempty(li))
+    {   printf("Rien a suppreimer la liste est deja vide\n");
+        return new_listeD();
+    }
+    //si la liste comporte un seul element
+    if (li->begin==li->end)
+    {
+        free(li);
+        li=NULL;
+        return new_listeD();
+    }
+    //si la liste comporte plus d'un  element
+      ListeNode *temp=li->begin;//cette variable temporaire vas nous permettre de parcourrie toute laliste et nous eviter de bouger le pointeru beging ou end***
+
+        // suppression de  l'élément après l'élément de valeur val trouvé
+        //si le deuxieme element de la liste a la valeur specifier alors on vas juste supprimer le premier element de la liste
+        if (temp->next != NULL && temp->next->value == val) {
+        ListeNode *temp1 = temp;//la varaiable temp1 permet de sauvegarder la valeur de temp->next en d'autre terme la valeur que l'on vas supprimer sera mtn dans temp1
+        li->begin = temp->next;
+        temp->next->back = NULL;
+        free(temp1);
+        li->length--;
+        return li;
+        //li=liste_pop_front_liste(li);
+        }  
+        while (temp != NULL && temp->value != val) {
+        temp = temp->next;
+        }   
+        if (temp == NULL) {
+        // Aucun élément de valeur 6 trouvé dans la liste
+        printf("Position non trouver\n");
+        // Libérer la mémoire allouée à l'élément
+        return li; // Ou retourner NULL ou une erreur
+        }
+        /*ListeNode *temp1=temp->next->back;temp est un pointeur vers le nœud actuel dans la liste. temp->next: C'est un pointeur vers le prochain nœud dans la liste après temp
+        temp->next->back:C'est un pointeur vers le nœud précédent dans la liste par rapport au nœud temp->next
+        Donc, lorsque nous utilisons temp->next->back, cela signifie que nous accédons au pointeur back du nœud suivant dans la liste par rapport au nœud temp.
+        */
+       //*****------*****
+       /*
+        ListeNode *temp1=temp->next->back;
+        temp->next->back=temp1->back;     
+        if (temp1->back != NULL) {
+        temp1->back->next = temp->next;
+        }*/
+        //******-----******
+        ListeNode *temp1=temp->back;
+        temp=temp1->back->next;
+        if (temp1->back != NULL) {
+        temp1->back->next = temp->next;
+        }
+        temp1->next=NULL;//ici on coupe le lien que cet element avais avec la liste
+        temp1->back=NULL;
+        free(temp1);
+        temp1=NULL;
+        li->length--;
+        return li;
+    }
+
 //*************************************************************************************//
 //cette fonction permet de retirer un element en fin de la liste
 ListeD liste_pop_back_liste(ListeD li){
@@ -206,7 +376,7 @@ ListeD liste_pop_back_liste(ListeD li){
     {   printf("Rien a suppreimer la liste est deja vide\n");
         return new_listeD();
     }
-    //si la liste comporte un seull element
+    //si la liste comporte un seul element
     if (li->begin==li->end)
     {
         free(li);
@@ -300,12 +470,18 @@ int main(){
  printf("La liste compte %d elements\n",length_listeD(myliste));
  printf_listeD(myliste);
  myliste=liste_push_medium_liste(myliste,8,6);
- myliste=liste_push_medium_liste(myliste,10,14);
+ myliste=liste_push_medium_liste1(myliste,12,6);
+ myliste=liste_push_medium_liste(myliste,10,23);
  printf_listeD(myliste);
+ printf("La liste compte %d elements\n",length_listeD(myliste));
  printf("La somme des elements de la liste est de : %d \n",sum_elements(myliste));
  printf("Le premier element de la liste est de : %d \n",first_element_list(myliste));
  printf("Le dernier element de la liste est de : %d \n",last_element_list(myliste));
- myliste=liste_pop_back_liste(myliste);
+ myliste=liste_pop_medium_liste(myliste,12);
+ //myliste=liste_pop_back_liste(myliste);
+ printf("La liste compte %d elements\n",length_listeD(myliste));
+ printf_listeD(myliste);
+ myliste=liste_pop_medium_liste1(myliste,14);
  printf("La liste compte %d elements\n",length_listeD(myliste));
  printf_listeD(myliste);
  myliste=clear_liste(myliste);
