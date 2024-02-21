@@ -20,9 +20,28 @@ int fibonacci1(int n){
 }
 
 int main (){
+	int *T,n,i=0,m=0;
+	printf("entrer le dernier indice de la suite de fibonnaci:");
+	scanf("%d",&n);
+	T=(int*)malloc(sizeof(int) * n);   
+	if(T==NULL)
+	    printf("allocation echoue\n");
+	T[0]=1;
+	T[1]=1;
+	i=2;
+	m=2;
+	while(m!=n){
+		T[i]=fibonacci1(m);
+		i++;
+	    m++;
+	}
+	for(i=0;i<n;i++){
+		printf("%d ",T[i]);
+	}
+	
 	
 	//printf("%d \n",fibonacci(40));
-	printf("%d",fibonacci1(11));
+	//printf("%d",fibonacci1(11));
 	
 	
 	
