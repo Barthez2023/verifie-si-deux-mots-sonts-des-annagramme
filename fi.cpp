@@ -1,3 +1,4 @@
+//ce code donne tout les element d(une suite de Fibonnaci jusau'au terme entrer
 #include<stdio.h>
 #include<stdlib.h>
 int fibonacci(int n){
